@@ -17,42 +17,35 @@ const addStudent = async (req, res) => {
 
 };
 
-const getAllStudents = (req, res) => {
-  const retrieveQuery = ` SELECT * FROM Students`;
-  db.execute(retrieveQuery, (err, results) => {
-    if (err) {
-      console.log(err.message);
-      res.status(404).send("err.message");
-      connection.end();
-      return;
-    }
-    console.log("Retrieved all the  student record");
-    res.status(200).json(results);
-  });
+const getAllStudents = async(req, res) => {
+  try {
+    const students = await Student.findAll()
+    console.log("Retrieved all the students records")
+    res.status(200).json(students)
+  } catch (error) {
+    console.log(error)
+    res.status(500).send("Unable to retrieve students records")
+  }
 };
 
-const getTheStudent = (req, res) => {
-  const { id } = req.params;
-  console.log("id", id);
-
-  if (!id) {
-    return res.status(400).send("ID is required");
+const getTheStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+     if(!id){
+      return res.status(400).send("Id is required")
+     }
+    const student = await Student.findByPk(id)
+    if(!student){
+      return res.status(404).send("Student not found")
+    }
+    res.status(200).json(student)
+    
+  } catch (error) {
+    console.log(error)
+    
   }
-  const getStudentQuery = `SELECT  * FROM Students 
-       WHERE  id = ?`;
+res.status(500).send("soething went wrong")
 
-  db.execute(getStudentQuery, [id], (err, results) => {
-    if (err) {
-      console.log(err.message);
-      res.status(500).send(err.message);
-      return;
-    }
-    if (results.length === 0) {
-      return res.status(404).send("Student not found");
-    }
-
-    res.status(200).json(results[0]);
-  });
 };
 
 const updateStudent = async (req, res) => {
