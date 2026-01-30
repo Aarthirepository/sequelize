@@ -55,32 +55,22 @@ const getTheStudent = (req, res) => {
   });
 };
 
-const updateStudent = (req, res) => {
-  const { id } = req.params;
-  let { name, email, age } = req.body;
-  if (!id) {
-    return res.status(400).send("ID is required");
+const updateStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let { name} = req.body;
+    
+    const student =  await Student.findByPk(id)
+    if(!student){
+         res.status(404).send("User not found")
+    }
+    student.name = name
+    await student.save()
+    res.status(200).send("user hasd been update")
+  } catch (error) {
+    res.status(500).send("user cannot be updated")
   }
-
-  name = name ?? null;
-  email = email ?? null;
-  age = age ?? null;
-
-  const updateQuery = ` UPDATE Students SET name=?, email=?,age=? 
-  WHERE id =? `;
-
-  db.execute(updateQuery, [name, email, age, id], (err, results) => {
-    if (err) {
-      console.log(err.message);
-      res.status(404).send(err.message);
-    }
-
-    if (results.affectedRows === 0) {
-      return res.status(404).send("Student record not found");
-    }
-
-    res.status(200).send(`Student ${id}  ${name} ${email} ${age} is updated`);
-  });
+  
 };
 
 const deleteStudent = (req, res) => {
