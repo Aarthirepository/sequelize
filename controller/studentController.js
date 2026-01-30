@@ -1,24 +1,20 @@
 const db = require("../utils/db-connections");
+const Student= require('../models/students')
 
-const addStudent = (req, res) => {
-  const { name, email, age } = req.body;
+const addStudent = async (req, res) => {
+  try{
+    const { name, email } = req.body;
+    const student =await Student.create({
+            email:email,
+            name:name
+    })
+          res.status(201).send(`User with name ${name} is  created`)
 
-  if (!name || !email || !age) {
-    return res.status(400).send("Name, email, and age are required");
+  }catch(err){
+    res.status(500).send(`Unable to make an entry `)
+
   }
 
-  const insertQuery = "INSERT INTO  Students(name,email,age) VALUES (?,?,?)";
-
-  db.execute(insertQuery, [name, email, age], (err, results) => {
-    if (err) {
-      console.log(err.message);
-      res.status(500).send(err.message);
-      connection.end();
-      return;
-    }
-    console.log(`Inserted student: ${name}, ${email}, ${age}`);
-    res.status(200).send(`Student ${name}, ${email} of ${age} is added`);
-  });
 };
 
 const getAllStudents = (req, res) => {

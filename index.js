@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.get("/", (req, res) => res.send("Hello World"));
 
-app.use('/students', studentRoutes)
+app.use('/', studentRoutes)
   
 db.sync({force:true}).then(()=>{
     app.listen(3000, ()=>{
