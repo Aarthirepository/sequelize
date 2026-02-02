@@ -1,5 +1,6 @@
 const db = require("../utils/db-connections");
-const Student= require('../models/students')
+const Student= require('../models/students');
+const IdentityCard = require("../models/identityCard");
 
 const addStudent = async (req, res) => {
   try{
@@ -16,6 +17,8 @@ const addStudent = async (req, res) => {
   }
 
 };
+
+
 
 const getAllStudents = async(req, res) => {
   try {
@@ -38,16 +41,30 @@ const getTheStudent = async (req, res) => {
     if(!student){
       return res.status(404).send("Student not found")
     }
-    res.status(200).json(student)
+    return res.status(200).json(student)
     
   } catch (error) {
     console.log(error)
     
   }
-res.status(500).send("soething went wrong")
+return res.status(500).send("something went wrong")
 
 };
 
+
+ const addingValuesToStudentAndIdentityTable =  async(req,res)=>{
+  try {
+     
+      const student = await Student.create(req.body.student)
+      const  idCard = await IdentityCard.create({
+        ...req.body.IdentityCard,
+        StudentId: student.id
+      })
+      res.status(201).json({student,idCard})
+  } catch (error) {
+    res.status(500).json({error:error.message})
+  }
+ }
 const updateStudent = async (req, res) => {
   try {
     const { id } = req.params;
@@ -91,4 +108,5 @@ module.exports = {
   getTheStudent,
   updateStudent,
   deleteStudent,
+  addingValuesToStudentAndIdentityTable,
 };

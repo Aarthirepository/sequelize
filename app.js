@@ -10,7 +10,7 @@ require('./models')
 
 app.get("/", (req, res) => res.send("Hello World"));
 
-app.use('/', studentRoutes)
+app.use('/students', studentRoutes)
   
 db.sync({force:true}).then(()=>{
     app.listen(3000, ()=>{
