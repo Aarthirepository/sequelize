@@ -1,12 +1,12 @@
 const express = require('express')
 const db = require('./utils/db-connections')
 const studentRoutes = require('./routes/studentRoutes')
-const studentModel= require('./models/students')
+
 const app = express()
 
 app.use(express.json());
 
-
+require('./models')
 
 app.get("/", (req, res) => res.send("Hello World"));
 

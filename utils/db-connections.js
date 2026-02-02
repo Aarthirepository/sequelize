@@ -7,7 +7,8 @@ const sequelize = new Sequelize(
     }
 );
 
-(async()=>{try{
+(async()=>{
+    try{
     await sequelize.authenticate()
     console.log("Connection to the database  has been created")
 
