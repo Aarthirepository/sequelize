@@ -1,22 +1,25 @@
-const express = require('express')
-const db = require('./utils/db-connections')
-const studentRoutes = require('./routes/studentRoutes')
+const express = require("express");
+const db = require("./utils/db-connections");
+const studentRoutes = require("./routes/studentRoutes");
+const courseRoutes = require("./routes/courseRoutes");
 
-const app = express()
+const app = express();
 
 app.use(express.json());
 
-require('./models')
+require("./models");
 
 app.get("/", (req, res) => res.send("Hello World"));
 
-app.use('/students', studentRoutes)
-  
-db.sync({force:true}).then(()=>{
-    app.listen(3000, ()=>{
-        console.log('Server is connected')
-    })
+app.use("/students", studentRoutes);
+app.use("/courses", courseRoutes);
 
-}).catch((err)=>{
-    console.log(err) 
-})
+db.sync({ force: true })
+  .then(() => {
+    app.listen(3000, () => {
+      console.log("Server is connected");
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
